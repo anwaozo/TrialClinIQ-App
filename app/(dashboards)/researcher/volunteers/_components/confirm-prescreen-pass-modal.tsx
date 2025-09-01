@@ -1,0 +1,113 @@
+"use client"
+
+import type React from "react"
+
+import { useState } from "react"
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Textarea } from "@/components/ui/textarea"
+import { CheckCircle, Upload } from "lucide-react"
+
+interface ConfirmPrescreenPassModalProps {
+  open: boolean
+  onOpenChange: (open: boolean) => void
+  volunteer?: {
+    id: string
+    name: string
+  }
+}
+
+export function ConfirmPrescreenPassModal({ open, onOpenChange, volunteer }: ConfirmPrescreenPassModalProps) {
+  const [formData, setFormData] = useState({
+    screeningCompletionDate: "",
+    passReason: "",
+    supportingDocument: null as File | null,
+  })
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    console.log("Confirm pre-screen pass:", formData)
+    onOpenChange(false)
+  }
+
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file) {
+      setFormData({ ...formData, supportingDocument: file })
+    }
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-lg">
+        <DialogHeader className="text-center">
+          <div className="mx-auto w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mb-4">
+            <CheckCircle className="w-6 h-6 text-green-600" />
+          </div>
+          <DialogTitle className="text-xl font-semibold">Confirm Pre-Screen Pass</DialogTitle>
+          <DialogDescription className="text-gray-600 text-sm">
+            Mark volunteer as pre-screen eligible based on completed assessments
+          </DialogDescription>
+        </DialogHeader>
+
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div>
+            <Label htmlFor="screeningCompletionDate" className="text-sm font-medium">
+              Screening Completion Date <span className="text-red-500">*</span>
+            </Label>
+            <Input
+              type="date"
+              value={formData.screeningCompletionDate}
+              onChange={(e) => setFormData({ ...formData, screeningCompletionDate: e.target.value })}
+              className="w-full"
+            />
+          </div>
+
+          <div>
+            <Label htmlFor="passReason" className="text-sm font-medium">
+              Pass Reason / Notes <span className="text-red-500">*</span>
+            </Label>
+            <Textarea
+              value={formData.passReason}
+              onChange={(e) => setFormData({ ...formData, passReason: e.target.value })}
+              placeholder="Briefly describe the reason since it doesn't fit the listed options..."
+              rows={4}
+            />
+          </div>
+
+          <div>
+            <Label className="text-sm font-medium">Upload Supporting Document</Label>
+            <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
+              <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
+              <div className="text-sm">
+                <button type="button" className="text-blue-600 hover:underline">
+                  Click to upload or drag
+                </button>
+                <span className="text-gray-500"> and drop PDF, CSV</span>
+              </div>
+              <input type="file" accept=".pdf,.csv" onChange={handleFileUpload} className="hidden" />
+            </div>
+          </div>
+
+          <DialogFooter className="flex gap-3 pt-4">
+            <Button type="button" variant="outline" onClick={() => onOpenChange(false)} className="flex-1">
+              Cancel
+            </Button>
+            <Button type="submit" className="flex-1 bg-blue-600 hover:bg-blue-700">
+              Confirm Pre-Screen Pass
+            </Button>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
+  )
+}
