@@ -27,13 +27,13 @@ const siteData = {
 };
 
 interface SitePageProps {
-  params: {
+  params:Promise < {
     siteId: string;
-  };
+  }>;
 }
 
-export default function SitePage({ params }: SitePageProps) {
-  const site = siteData[params.siteId as keyof typeof siteData];
+export default async function SitePage({ params }: SitePageProps) {
+  const site = siteData[(await params).siteId as keyof typeof siteData];
 
   if (!site) {
     notFound();
