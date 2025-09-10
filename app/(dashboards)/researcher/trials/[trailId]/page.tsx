@@ -11,21 +11,23 @@ import { EnrollmentMetrics } from "./_components/enrollment-metrics";
 import { TrialDescription } from "./_components/trial-description";
 
 interface TrialDetailPageProps {
-  params: {
+  params: Promise<{
     trialId: string;
-  };
+  }>;
 }
 
 type TabType = "description" | "appointments" | "enrollment-metrics";
 
-export default function TrialDetailPage({ params }: TrialDetailPageProps) {
+export default async function TrialDetailPage({
+  params,
+}: TrialDetailPageProps) {
   const [activeTab, setActiveTab] = useState<TabType>("description");
-
+  const trialId = (await params).trialId;
   // Mock trial data - in real app this would come from API
   const trial = {
-    id: params.trialId,
+    id: trialId,
     title: "Agorain, New Treatment for Chronic Neuropathy Pain",
-    trialId: params.trialId,
+    trialId: trialId,
     phase: "Phase II",
     ageRequirement: ">18yrs",
     status: "Now Recruiting",
@@ -42,9 +44,9 @@ export default function TrialDetailPage({ params }: TrialDetailPageProps) {
       case "description":
         return <TrialDescription trial={trial} />;
       case "appointments":
-        return <TrialAppointments trialId={params.trialId} />;
+        return <TrialAppointments trialId={trialId} />;
       case "enrollment-metrics":
-        return <EnrollmentMetrics trialId={params.trialId} />;
+        return <EnrollmentMetrics trialId={trialId} />;
       default:
         return <TrialDescription trial={trial} />;
     }
