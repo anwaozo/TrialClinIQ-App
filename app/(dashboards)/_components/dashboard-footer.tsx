@@ -21,7 +21,7 @@ export function DashboardFooter() {
             </Link>
           </div>
           <p className="text-sm text-gray-600">
-            Curated by <span className="text-blue-600">Appert</span>
+            Curated by <span className="text-blue-600">Apperr</span>
           </p>
         </div>
       </div>

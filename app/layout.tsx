@@ -6,6 +6,7 @@ import Header from "@/components/Header";
 const instru_Sans = Instrument_Sans({
   variable: "--font-instru-sans",
   weight: ["600", "700"],
+  subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
